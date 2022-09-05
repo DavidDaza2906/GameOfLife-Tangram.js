@@ -9,7 +9,7 @@ let canvas,ctx;
 let interval;
 let slider;
 let sliderOutput;
-let frames = 100;
+//let frames = 100;
 
 function paintCanvas(){
   for (let y = 0; y < nRC; y++){
@@ -35,10 +35,12 @@ function cleanCanvas(){
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
 }
+
 function clearCanvas(){
   cleanCanvas();
   grid = initArray();
 }
+
 function randomCanvas(){
   ctx.fillRect(0,0,canvas.width,canvas.height) // Rellenar la pantalla con negro para que no se acumulen frames
   grid = randomArray(grid);
@@ -46,7 +48,6 @@ function randomCanvas(){
 }
 
 function startGame(){
-
   let nextGrid = initArray();
   for (let i = 0; i < nRC; i++){
     for (let j= 0; j< nRC; j++){
@@ -56,26 +57,25 @@ function startGame(){
     }
   }
   grid = nextGrid;
-  paintCanvas();
-
- 
+  paintCanvas(); 
 }
-function startGameInterval(){
+
+function startGameInterval(frames){
   interval = setInterval(startGame, frames);
 }
-function stop(){
 
+function stop(){
   clearInterval(interval);
-  cancelAnimationFrame();
- 
 }
+
 function initArray(){
-let array = Array(nRC)
+  let array = Array(nRC)
   for (let i=0;i<nRC; i++){
     array[i] = Array(nRC)
+  }
+  return array
 }
-return array
-}
+
 function randomArray(array){
   for (let i=0;i<nRC; i++){
     for (let j = 0; j < nRC; j++) {
@@ -84,6 +84,7 @@ function randomArray(array){
   }
   return array
 }
+
 function livingCells(array, x, y) {
   let n = 0;
   for (let i = -1; i < 2; i++) {
@@ -96,36 +97,37 @@ function livingCells(array, x, y) {
   n -= array[x][y];
   return n;
 }
+
 function rules(state,n,i,j){
-    if (state == 0 && n ==3 ){
-      return 1;
-    }
-    else if (state ==1 && (n< 2 || n >3)){
-      return  0;
-    }
-    else {
-      return state;
-    }}
+  if (state == 0 && n ==3 ){
+    return 1;
+  }
+  else if (state ==1 && (n< 2 || n >3)){
+    return  0;
+  }
+  else {
+    return state;
+  }
+}
+
 function figures(n){
   switch(n){
     case 0:
       grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
-      requestAnimationFrame(startGame);
+      //requestAnimationFrame(startGame);
     case 1:
       grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
-
   }
-  
-
+  paintCanvas();
 }
+
 slider = document.getElementById("myRange");
 sliderOutput = document.getElementById("frameRate");
- slider.oninput = function() {
-frames = this.value;
-   clearInterval(interval);
-   startGameInterval();
-  requestAnimationFrame(startGame);
-  
+slider.oninput = function() {
+  frames = this.value;
+  clearInterval(interval);
+  startGameInterval(frames);
+  //requestAnimationFrame(startGame);
 }
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
@@ -134,5 +136,4 @@ canvas.addEventListener("click", function(event){
   mouseX = Math.floor((event.clientX)/sR)-20;
   mouseY = Math.floor((event.clientY)/sC);
   grid[mouseX][mouseY] =1 
-
 })
