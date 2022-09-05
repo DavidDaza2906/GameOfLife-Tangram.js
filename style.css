@@ -1,35 +1,36 @@
-
-body{
+body {
   background-color: #111;
-color:#f8f8f8}
-.controls{
-  width:auto;
-  display:flex;
-  flex-direction:column;
-  float:left;
-  
+  color: #f8f8f8
 }
-#random{
-height:30px;
+
+.controls {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  float: left;
+
 }
-#start{
-  height:30px;
-  margin-top:10px;
+
+#random {
+  height: 30px;
 }
-#stop{
-  height:30px;
-  margin-top:10px;
+
+#start {
+  height: 30px;
+  margin-top: 10px;
 }
+
+#stop {
+  height: 30px;
+  margin-top: 10px;
+}
+
 .slider {
-  width: 100px; 
-  height: 15px; 
+  width: 100px;
+  height: 15px;
   background: #d3d3d3;
   opacity: 0.7;
   margin-top: 10px;
-
-#myRange {
-  direction: rtl
-}
 }
 
 .slider:hover {
@@ -37,36 +38,40 @@ height:30px;
 }
 
 
-canvas{
- background: #111;
+canvas {
+  background: #111;
   padding: 0;
   margin-left: 8%;
-  float:left;
-  
-}
-#example1{
-  width:100px;
-  height:100px;
+  float: left;
 
-  display:flex;
-  flex-direction:column;
+}
+
+#example1 {
+  width: 100px;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
   margin-left: 1600px;
   margin-bottom: 20px;
 }
-#example2{
-  width:100px;
-  height:100px;
 
-  display:flex;
-  flex-direction:column;
+#example2 {
+  width: 100px;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
   margin-left: 1600px;
   margin-bottom: 20px;
-}#example3{
-  width:100px;
-  height:100px;
+}
 
-  display:flex;
-  flex-direction:column;
+#example3 {
+  width: 100px;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
   margin-left: 1600px;
   margin-bottom: 20px;
 }
