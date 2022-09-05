@@ -4,7 +4,6 @@ let height = 930;
 let sR = width/nRC;// ancho de cada celda
 let sC = width/nRC; // altura de cada celda
 let grid = initArray()
-
 let canvas,ctx;
 let interval;
 let slider;
@@ -16,14 +15,13 @@ function paintCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC)
-      ctx.fillStyle = '#6B8E23'
+      ctx.fillStyle = '#B8B8B8'
       ctx.fillRect(x*sR,y*sC,sR,sC)
       if (grid[x][y] == 1){
         ctx.fillStyle = '#f8f8f8'
         ctx.fillRect(x*sR,y*sC,sR,sC)
       }}}
 }
-
 function cleanCanvas(){
   ctx.fillStyle = 'black';
   ctx.fillRect(0,0,canvas.width,canvas.height) // Rellenar la pantalla con negro para que no se acumulen frames
@@ -31,7 +29,7 @@ function cleanCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC);
-      ctx.fillStyle = '#6B8E23';
+      ctx.fillStyle = '#B8B8B8';
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
 }
@@ -57,8 +55,6 @@ console.log('hola')
   }
   grid = nextGrid;
   paintCanvas();
-  
- 
 }
 function startGameInterval(){
   interval = setInterval(startGame, frames);
@@ -73,8 +69,6 @@ function initArray(){
 let array = Array(nRC);
   for (let i=0;i<nRC; i++){
     array[i] = Array(nRC)
-
-
   }
   for (let i=0;i<nRC; i++){
     for (let j = 0; j < nRC; j++) {
@@ -114,16 +108,13 @@ function rules(state,n,i,j){
       return state;
     }}
 function figures(n){
- 
     switch(n){
     case 0:{ 
       grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][31] = 1;
-    break;}
+      break;}
     case 1:{
-
-
       grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
-    break;}
+      break;}
     case 2:{
       grid[50][30] = 1; grid[51][31] = 1; grid[51][32] = 1; grid[50][32]= 1; grid[52][31] =1; 
       break;}
@@ -132,7 +123,7 @@ function figures(n){
 }
 slider = document.getElementById("myRange");
 sliderOutput = document.getElementById("frameRate");
- slider.oninput = function() {
+slider.oninput = function() {
 frames = this.value;
    clearInterval(interval);
    startGameInterval();
