@@ -26,6 +26,10 @@ height:30px;
   background: #d3d3d3;
   opacity: 0.7;
   margin-top: 10px;
+
+#myRange {
+  direction: rtl
+}
 }
 
 .slider:hover {
@@ -37,6 +41,32 @@ canvas{
  background: #111;
   padding: 0;
   margin-left: 8%;
+  float:left;
   
 }
+#example1{
+  width:100px;
+  height:100px;
 
+  display:flex;
+  flex-direction:column;
+  margin-left: 1600px;
+  margin-bottom: 20px;
+}
+#example2{
+  width:100px;
+  height:100px;
+
+  display:flex;
+  flex-direction:column;
+  margin-left: 1600px;
+  margin-bottom: 20px;
+}#example3{
+  width:100px;
+  height:100px;
+
+  display:flex;
+  flex-direction:column;
+  margin-left: 1600px;
+  margin-bottom: 20px;
+}
