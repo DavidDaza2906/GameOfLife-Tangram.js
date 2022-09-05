@@ -4,15 +4,18 @@ let height = 930;
 let sR = width/nRC;// ancho de cada celda
 let sC = width/nRC; // altura de cada celda
 let grid = initArray()
+
 let canvas,ctx;
 let interval;
+let slider;
+let sliderOutput;
 
 function paintCanvas(){
   for (let y = 0; y < nRC; y++){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC)
-      ctx.fillStyle = '#6B8E23'
+      ctx.fillStyle = '#B8B8B8'
       ctx.fillRect(x*sR,y*sC,sR,sC)
       if (grid[x][y] == 1){
         ctx.fillStyle = '#f8f8f8'
@@ -27,9 +30,14 @@ function cleanCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC);
-      ctx.fillStyle = '#6B8E23';
+      ctx.fillStyle = '#B8B8B8';
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
+}
+
+function clearCanvas(){
+  grid = initArray();
+  cleanCanvas();
 }
 
 function randomCanvas(){
@@ -47,22 +55,26 @@ function startGame(){
       nextGrid[i][j] = rules(state,neighbours,i,j)
     }
   }
+  paintCanvas(); 
   grid = nextGrid;
-  paintCanvas();
 }
-function startGameInterval(){
-  interval = setInterval(startGame, 100);
+
+function startGameInterval(frames){
+  interval = setInterval(startGame, frames);
 }
+
 function stop(){
   clearInterval(interval);
 }
+
 function initArray(){
-let array = Array(nRC)
+  let array = Array(nRC)
   for (let i=0;i<nRC; i++){
     array[i] = Array(nRC)
+  }
+  return array
 }
-return array
-}
+
 function randomArray(array){
   for (let i=0;i<nRC; i++){
     for (let j = 0; j < nRC; j++) {
@@ -71,6 +83,7 @@ function randomArray(array){
   }
   return array
 }
+
 function livingCells(array, x, y) {
   let n = 0;
   for (let i = -1; i < 2; i++) {
@@ -83,17 +96,41 @@ function livingCells(array, x, y) {
   n -= array[x][y];
   return n;
 }
-function rules(state,n,i,j){
-    if (state == 0 && n ==3 ){
-      return 1;
-    }
-    else if (state ==1 && (n< 2 || n >3)){
-      return  0;
-    }
-    else {
-      return state;
-    }}
 
+function rules(state,n,i,j){
+  if (state == 0 && n ==3 ){
+    return 1;
+  }
+  else if (state ==1 && (n< 2 || n >3)){
+    return  0;
+  }
+  else {
+    return state;
+  }
+}
+
+function figures(n){
+  console.log(n);
+  if (n == 0) {
+      grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
+      console.log("case 0");
+      paintCanvas();}
+  else {
+      grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
+      paintCanvas();
+  }
+}
+
+/*figureSlider = document.getElementById("figuresNumber");
+figureSlider.oninput = function(){
+  figures(this.value);
+}*/
+slider = document.getElementById("myRange");
+slider.oninput = function() {
+  frames = this.value;
+  clearInterval(interval);
+  startGameInterval(frames);
+}
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 document.addEventListener('DOMContentLoaded', cleanCanvas)

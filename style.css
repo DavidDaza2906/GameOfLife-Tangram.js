@@ -2,10 +2,41 @@
 body{
   background-color: #111;
 color:#f8f8f8}
+.controls{
+  width:auto;
+  display:flex;
+  flex-direction:column;
+  float:left;
+  
+}
+#random{
+height:30px;
+}
+#start{
+  height:30px;
+  margin-top:10px;
+}
+#stop{
+  height:30px;
+  margin-top:10px;
+}
+.slider {
+  width: 100px; 
+  height: 15px; 
+  background: #d3d3d3;
+  opacity: 0.7;
+  margin-top: 10px;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+
 canvas{
  background: #111;
   padding: 0;
-  margin-left: 16%;
+  margin-left: 8%;
   
 }
 
