@@ -15,7 +15,7 @@ function paintCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC)
-      ctx.fillStyle = '#6B8E23'
+      ctx.fillStyle = '#B8B8B8'
       ctx.fillRect(x*sR,y*sC,sR,sC)
       if (grid[x][y] == 1){
         ctx.fillStyle = '#f8f8f8'
@@ -30,14 +30,14 @@ function cleanCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC);
-      ctx.fillStyle = '#6B8E23';
+      ctx.fillStyle = '#B8B8B8';
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
 }
 
 function clearCanvas(){
-  cleanCanvas();
   grid = initArray();
+  cleanCanvas();
 }
 
 function randomCanvas(){
@@ -55,8 +55,8 @@ function startGame(){
       nextGrid[i][j] = rules(state,neighbours,i,j)
     }
   }
-  grid = nextGrid;
   paintCanvas(); 
+  grid = nextGrid;
 }
 
 function startGameInterval(frames){
@@ -110,17 +110,22 @@ function rules(state,n,i,j){
 }
 
 function figures(n){
-  switch(n){
-    case 0:
+  console.log(n);
+  if (n == 0) {
       grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
-    case 1:
+      console.log("case 0");
+      paintCanvas();}
+  else {
       grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
+      paintCanvas();
   }
-  paintCanvas();
 }
 
+/*figureSlider = document.getElementById("figuresNumber");
+figureSlider.oninput = function(){
+  figures(this.value);
+}*/
 slider = document.getElementById("myRange");
-sliderOutput = document.getElementById("frameRate");
 slider.oninput = function() {
   frames = this.value;
   clearInterval(interval);
@@ -129,8 +134,3 @@ slider.oninput = function() {
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 document.addEventListener('DOMContentLoaded', cleanCanvas)
-/*canvas.addEventListener("click", function(event){
-  mouseX = Math.floor((event.clientX)/sR)-20;
-  mouseY = Math.floor((event.clientY)/sC);
-  grid[mouseX][mouseY] =1 
-})*/
