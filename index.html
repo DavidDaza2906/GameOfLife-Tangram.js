@@ -9,14 +9,19 @@
 </head>
 
 <body>
-  <div id="game">
-    <canvas id="gameCanvas" width="1300" height="930"></canvas>   
-  </div>
-  <div class="controls">
+ <div class="controls">
     <button onclick="randomCanvas()" id="random">Random</button>
     <button onclick="startGameInterval()" id="start">Start</button>
     <button onclick="stop()" id="stop">Stop</button>
+    <button onclick="clearCanvas()" id="stop">Clear</button>
+
+   <input type="range" min="50" max="500" value="100" class="slider" id="myRange">
+
   </div>
+  <div id="game">
+    <canvas id="gameCanvas" width="1300" height="930"></canvas>   
+  </div>
+ 
   <script src="sketch.js"></script>
 
 

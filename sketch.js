@@ -4,8 +4,12 @@ let height = 930;
 let sR = width/nRC;// ancho de cada celda
 let sC = width/nRC; // altura de cada celda
 let grid = initArray()
+
 let canvas,ctx;
 let interval;
+let slider;
+let sliderOutput;
+let frames = 100;
 
 function paintCanvas(){
   for (let y = 0; y < nRC; y++){
@@ -31,7 +35,10 @@ function cleanCanvas(){
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
 }
-
+function clearCanvas(){
+  cleanCanvas();
+  grid = initArray();
+}
 function randomCanvas(){
   ctx.fillRect(0,0,canvas.width,canvas.height) // Rellenar la pantalla con negro para que no se acumulen frames
   grid = randomArray(grid);
@@ -39,6 +46,7 @@ function randomCanvas(){
 }
 
 function startGame(){
+
   let nextGrid = initArray();
   for (let i = 0; i < nRC; i++){
     for (let j= 0; j< nRC; j++){
@@ -49,12 +57,17 @@ function startGame(){
   }
   grid = nextGrid;
   paintCanvas();
+
+ 
 }
 function startGameInterval(){
-  interval = setInterval(startGame, 100);
+  interval = setInterval(startGame, frames);
 }
 function stop(){
+
   clearInterval(interval);
+  cancelAnimationFrame();
+ 
 }
 function initArray(){
 let array = Array(nRC)
@@ -93,7 +106,33 @@ function rules(state,n,i,j){
     else {
       return state;
     }}
+function figures(n){
+  switch(n){
+    case 0:
+      grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
+      requestAnimationFrame(startGame);
+    case 1:
+      grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
 
+  }
+  
+
+}
+slider = document.getElementById("myRange");
+sliderOutput = document.getElementById("frameRate");
+ slider.oninput = function() {
+frames = this.value;
+   clearInterval(interval);
+   startGameInterval();
+  requestAnimationFrame(startGame);
+  
+}
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 document.addEventListener('DOMContentLoaded', cleanCanvas)
+canvas.addEventListener("click", function(event){
+  mouseX = Math.floor((event.clientX)/sR)-20;
+  mouseY = Math.floor((event.clientY)/sC);
+  grid[mouseX][mouseY] =1 
+
+})
