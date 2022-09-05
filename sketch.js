@@ -9,13 +9,14 @@ let canvas,ctx;
 let interval;
 let slider;
 let sliderOutput;
+let frames = 100;
 
 function paintCanvas(){
   for (let y = 0; y < nRC; y++){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC)
-      ctx.fillStyle = '#B8B8B8'
+      ctx.fillStyle = '#6B8E23'
       ctx.fillRect(x*sR,y*sC,sR,sC)
       if (grid[x][y] == 1){
         ctx.fillStyle = '#f8f8f8'
@@ -30,16 +31,14 @@ function cleanCanvas(){
     for (let x = 0; x < nRC; x++){
       ctx.strokeStyle = '#f8f8f8';
       ctx.strokeRect(x*sR,y*sC,sR,sC);
-      ctx.fillStyle = '#B8B8B8';
+      ctx.fillStyle = '#6B8E23';
       ctx.fillRect(x*sR,y*sC,sR,sC);
     }}
 }
-
 function clearCanvas(){
-  grid = initArray();
   cleanCanvas();
+  grid = initArray();
 }
-
 function randomCanvas(){
   ctx.fillRect(0,0,canvas.width,canvas.height) // Rellenar la pantalla con negro para que no se acumulen frames
   grid = randomArray(grid);
@@ -47,6 +46,7 @@ function randomCanvas(){
 }
 
 function startGame(){
+console.log('hola')
   let nextGrid = initArray();
   for (let i = 0; i < nRC; i++){
     for (let j= 0; j< nRC; j++){
@@ -55,26 +55,34 @@ function startGame(){
       nextGrid[i][j] = rules(state,neighbours,i,j)
     }
   }
-  paintCanvas(); 
   grid = nextGrid;
+  paintCanvas();
+  
+ 
 }
-
-function startGameInterval(frames){
+function startGameInterval(){
   interval = setInterval(startGame, frames);
 }
-
 function stop(){
-  clearInterval(interval);
-}
 
+  clearInterval(interval);
+  cancelAnimationFrame(startGame);
+ 
+}
 function initArray(){
-  let array = Array(nRC)
+let array = Array(nRC);
   for (let i=0;i<nRC; i++){
     array[i] = Array(nRC)
-  }
-  return array
-}
 
+
+  }
+  for (let i=0;i<nRC; i++){
+    for (let j = 0; j < nRC; j++) {
+      array[i][j] = 0;
+    }
+  }
+return array
+}
 function randomArray(array){
   for (let i=0;i<nRC; i++){
     for (let j = 0; j < nRC; j++) {
@@ -83,7 +91,6 @@ function randomArray(array){
   }
   return array
 }
-
 function livingCells(array, x, y) {
   let n = 0;
   for (let i = -1; i < 2; i++) {
@@ -96,41 +103,48 @@ function livingCells(array, x, y) {
   n -= array[x][y];
   return n;
 }
-
 function rules(state,n,i,j){
-  if (state == 0 && n ==3 ){
-    return 1;
-  }
-  else if (state ==1 && (n< 2 || n >3)){
-    return  0;
-  }
-  else {
-    return state;
-  }
-}
-
+    if (state == 0 && n ==3 ){
+      return 1;
+    }
+    else if (state ==1 && (n< 2 || n >3)){
+      return  0;
+    }
+    else {
+      return state;
+    }}
 function figures(n){
-  console.log(n);
-  if (n == 0) {
-      grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
-      console.log("case 0");
-      paintCanvas();}
-  else {
-      grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
-      paintCanvas();
-  }
-}
+  startGameInterval()
+    switch(n){
+    case 0:{ 
+      grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][31] = 1;
+    break;}
+    case 1:{
 
-/*figureSlider = document.getElementById("figuresNumber");
-figureSlider.oninput = function(){
-  figures(this.value);
-}*/
+
+      grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
+    break;}
+    case 2:{
+      grid[50][30] = 1; grid[51][31] = 1; grid[51][32] = 1; grid[50][31]= 1; grid[50][32] =1;
+      break;}
+  }
+  
+}
 slider = document.getElementById("myRange");
-slider.oninput = function() {
-  frames = this.value;
-  clearInterval(interval);
-  startGameInterval(frames);
+sliderOutput = document.getElementById("frameRate");
+ slider.oninput = function() {
+frames = this.value;
+   clearInterval(interval);
+   startGameInterval();
+  requestAnimationFrame(startGame);
+  
 }
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 document.addEventListener('DOMContentLoaded', cleanCanvas)
+canvas.addEventListener("click", function(event){
+  mouseX = Math.floor((event.clientX)/sR)-20;
+  mouseY = Math.floor((event.clientY)/sC);
+  grid[mouseX][mouseY] =1 
+
+})
