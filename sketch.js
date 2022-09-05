@@ -114,7 +114,7 @@ function rules(state,n,i,j){
       return state;
     }}
 function figures(n){
-  startGameInterval()
+ 
     switch(n){
     case 0:{ 
       grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][31] = 1;
@@ -125,10 +125,10 @@ function figures(n){
       grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
     break;}
     case 2:{
-      grid[50][30] = 1; grid[51][31] = 1; grid[51][32] = 1; grid[50][31]= 1; grid[50][32] =1;
+      grid[50][30] = 1; grid[51][31] = 1; grid[51][32] = 1; grid[50][32]= 1; grid[52][31] =1; 
       break;}
   }
-  
+ paintCanvas() 
 }
 slider = document.getElementById("myRange");
 sliderOutput = document.getElementById("frameRate");
@@ -145,6 +145,8 @@ document.addEventListener('DOMContentLoaded', cleanCanvas)
 canvas.addEventListener("click", function(event){
   mouseX = Math.floor((event.clientX)/sR)-20;
   mouseY = Math.floor((event.clientY)/sC);
-  grid[mouseX][mouseY] =1 
+  grid[mouseX][mouseY] =1;
+  paintCanvas()
 
 })
+
