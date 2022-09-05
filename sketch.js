@@ -9,7 +9,6 @@ let canvas,ctx;
 let interval;
 let slider;
 let sliderOutput;
-//let frames = 100;
 
 function paintCanvas(){
   for (let y = 0; y < nRC; y++){
@@ -114,7 +113,6 @@ function figures(n){
   switch(n){
     case 0:
       grid[50][30] = 1; grid[51][30] = 1; grid[50][31] = 1; grid[51][32] = 1;
-      //requestAnimationFrame(startGame);
     case 1:
       grid[50][30] = 1; grid[51][30]=1; grid[50][31] =1; grid[53][32] = 1; grid[52][33] = 1; grid[53][33] = 1;
   }
@@ -127,13 +125,12 @@ slider.oninput = function() {
   frames = this.value;
   clearInterval(interval);
   startGameInterval(frames);
-  //requestAnimationFrame(startGame);
 }
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 document.addEventListener('DOMContentLoaded', cleanCanvas)
-canvas.addEventListener("click", function(event){
+/*canvas.addEventListener("click", function(event){
   mouseX = Math.floor((event.clientX)/sR)-20;
   mouseY = Math.floor((event.clientY)/sC);
   grid[mouseX][mouseY] =1 
-})
+})*/
