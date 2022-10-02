@@ -1,0 +1,8 @@
+body {
+  background-image:url("background.jpg");
+}
+canvas{
+  background-color:white;
+  margin-left:600px;
+  margin-top:100px;
+}
