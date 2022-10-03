@@ -23,10 +23,10 @@ canvas{
 @media screen and (orientation: portrait) {
 canvas{
   width: 70%;
-  height: 30%;
+  height: 40%;
   position: relative;
   left: 15%;
-  top: 35%;
+  top: 30%;
   background-color:white;
 
 }
