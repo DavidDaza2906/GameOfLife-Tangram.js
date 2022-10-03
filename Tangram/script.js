@@ -31,10 +31,9 @@ canvas.addEventListener("click", evt => {
   let x= Math.floor(((evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width)/sC);
   let y= Math.floor(((evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height)/sR);
   //grid[mouseX][mouseY] = 1;
-  paintCanvas()
   console.log(x,y)
 })
-
+setInterval(paintCanvas,100)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posibule forma
