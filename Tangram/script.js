@@ -33,7 +33,8 @@ canvas.addEventListener("click", evt => {
   //grid[mouseX][mouseY] = 1;
   console.log(x,y)
 })
-setInterval(paintCanvas,100)
+
+//setInterval(paintCanvas,100)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posibule forma
