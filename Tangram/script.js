@@ -33,6 +33,15 @@ canvas.addEventListener("click", evt => {
   //grid[mouseX][mouseY] = 1;
   console.log(x,y)
 })
+
+let portrait = window.matchMedia("(orientation: portrait)");
+portrait.addEventListener("change", function(e) {
+    if(e.matches) {
+        window.alert("Pon tu dispositivo horizontalmente!")
+    } else {
+        paintCanvas();
+    }
+})
 setInterval(paintCanvas,100)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
