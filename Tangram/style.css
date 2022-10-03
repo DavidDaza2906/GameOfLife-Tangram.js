@@ -12,8 +12,6 @@ body {
   height: 100%;
 }
 @media screen and (orientation: landscape) {
-
-
 canvas{
   width: 40%;
   height: 70%;
@@ -27,8 +25,8 @@ canvas{
   width: 70%;
   height: 40%;
   position: relative;
-  left: 30%;
-  top: 15%;
+  left: 15%;
+  top: 30%;
   background-color:white;
 
 }
