@@ -1,4 +1,3 @@
-
 let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
 let nRC = 10;
@@ -10,7 +9,7 @@ function distance(x1,y1,x2,y2){
 }
 
 
-export let rectangle = {
+let rectangle = {
   constructor(color,x,y,sideLength,rotation,name){
     this.color = color;
     this.x = x;
@@ -199,5 +198,4 @@ setInterval(draw,10)
 //Verificar distintas formas de solucionar
 //Margenes posibule forma
 // Paralelogramo relfejo
-
 
