@@ -15,11 +15,12 @@ class rectangle {
   draw(){
     this.name = new Path2D();
     const a = ((Math.PI * 2)/ 4);
-    for (let i = 0; i < 4 + 0; i++) {
+    for (let i = 0; i < 5; i++) {
       this.name.lineTo(this.x + (this.sideLength * Math.cos(a*i+this.rotation)), this.y + (this.sideLength * Math.sin(a*i+this.rotation)));
     }
   ctx.fillStyle = this.color;
   ctx.fill(this.name);
+  ctx.stroke(this.name)
   }
 };
 
@@ -120,7 +121,7 @@ canvas.addEventListener("mousemove", event =>{
     y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
       isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
-      if (isPointInPath){
+      if (isPointInPath && down){
         figuresTotal[i].x = x;
         figuresTotal[i].y = y;// No funciona bien en los triangulos xd
         
