@@ -3,13 +3,7 @@ let ctx = canvas.getContext('2d');
 let nRC = 10;
 let sR = canvas.height/nRC;
 let sC = canvas.width/nRC;
-let coor= []
-function distance(x1,y1,x2,y2){
-   return (Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)))
-}
-
-
-let rectangle = {
+class rectangle {
   constructor(color,x,y,sideLength,rotation,name){
     this.color = color;
     this.x = x;
@@ -17,102 +11,49 @@ let rectangle = {
     this.sideLength = sideLength;
     this.rotation = rotation;
     this.name = name;
-  },
+  }
   draw(){
     this.name = new Path2D();
     const a = ((Math.PI * 2)/ 4);
-    for (let i = 0; i < 4 + 0; i++) {
+    for (let i = 0; i < 5; i++) {
       this.name.lineTo(this.x + (this.sideLength * Math.cos(a*i+this.rotation)), this.y + (this.sideLength * Math.sin(a*i+this.rotation)));
     }
   ctx.fillStyle = this.color;
   ctx.fill(this.name);
+  ctx.stroke(this.name)
   }
 };
 
-let triangle = { 
+class triangle { 
   constructor(color,x,y,sideLength,rotation,name){
     this.color = color;
     this.x = x;
     this.y = y;
     this.sideLength = sideLength;
     this.rotation = rotation;
-    this.name = name;
-},
+    this.name = name
+}
+
   draw(){
-    /// Crear triangulo en base al centro
-    ctx.lineWidth = 4;
     this.name = new Path2D();
     this.name.moveTo(this.x, this.y);
-    this.name.lineTo()
-    this.name.lineTo(this.x+this.sideLength,this.y);
-    this.name.lineTo(this.x+this.sideLength*Math.cos(Math.PI/3),this.y+this.sideLength*Math.sin(Math.PI/3))
+    this.name.lineTo(this.x + (this.sideLength*Math.cos((Math.PI/2)+ this.rotation)),this.y + (this.sideLength * Math.sin((Math.PI/2) + this.rotation)));
+    this.name.lineTo(this.x + (this.sideLength * Math.cos((Math.PI*2) + this.rotation)),this.y + (this.sideLength * Math.sin((Math.PI*2) + this.rotation)));
     this.name.lineTo(this.x,this.y)
     ctx.fillStyle = this.color;
-    ctx.fill(this.name)
+    ctx.fill(this.name);
+    ctx.lineWidth = 4
+    ctx.strokeStyle = "white"
+    ctx.stroke(this.name)
   }
 }
 
-
-let firstRectangle = Object.create(rectangle);
-rectangle.color = "rgba(46,142,222,1)";
-rectangle.x = 150;
-rectangle.y = 300;
-rectangle.sideLength = 120;
-rectangle.rotation = Math.PI/4;
-rectangle.name = rectangle;
-
-let smallTriangle1 = Object.create(triangle);
-smallTriangle1.sides = 3;
-smallTriangle1.color = "rgba(241,91,96,1)";
-smallTriangle1.x = 100;
-smallTriangle1.y = 100;
-smallTriangle1.sideLength = 100;
-smallTriangle1.rotation = Math.PI/6;
-smallTriangle1.name = smallTriangle1;
-smallTriangle1.regular = true;
-
-let smallTriangle2 = Object.create(triangle);
-smallTriangle2.sides = 3;
-smallTriangle2.color = "rgba(57,181,160,1)";
-smallTriangle2.x = 150;
-smallTriangle2.y = 500;
-smallTriangle2.sideLength = 100;
-smallTriangle2.rotation = Math.PI/6;
-smallTriangle2.name = smallTriangle2;
-smallTriangle2.regular = true;
-
-
-let bigTriangle1 = Object.create(triangle);
-bigTriangle1.sides = 3;
-bigTriangle1.color = "rgba(164, 146, 234,1)";
-bigTriangle1.x = 400;
-bigTriangle1.y = 600;
-bigTriangle1.sideLength = 200;
-bigTriangle1.rotation = Math.PI/2;
-bigTriangle1.name = bigTriangle1;
-bigTriangle1.regular = true;
-
-
-let bigTriangle2 = Object.create(triangle);
-bigTriangle2.sides = 3;
-bigTriangle2.color = "rgba(193, 212, 94,1)";
-bigTriangle2.x = 500;
-bigTriangle2.y = 200;
-bigTriangle2.sideLength = 200;
-bigTriangle2.rotation = Math.PI;
-bigTriangle2.name = bigTriangle2;
-bigTriangle2.regular = true;
-
-let rightTriangle = Object.create(triangle);
-rightTriangle.sides = 3;
-rightTriangle.color = "rgba(241,91,96,1)";
-rightTriangle.x = 650;
-rightTriangle.y = 210;
-rightTriangle.sideLength = 100;
-rightTriangle.rotation = 0 ;
-0;
-rightTriangle.name = rightTriangle;
-rightTriangle.regular = false;
+let firstRectangle = new rectangle("rgba(46,142,222,1)",800,600,200, Math.PI/2, 'rectangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,400,280,7*Math.PI/4,'triangle');
+let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,600,280,Math.PI/4, 'triangle');
+let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,600,560,5*Math.PI/4,'triangle')
+let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,600,560,3*Math.PI/4,'triangle')
+let midTriangle = new triangle("rgba(150,1,16,1)",1000,1000, 400,Math.PI, 'triangle')
 
 function grid() {
   ctx.lineWidth = 1;
@@ -124,13 +65,15 @@ function grid() {
   }
   ctx.lineWidth = 10;
   ctx.beginPath();
-  ctx.moveTo(300,0);
-  ctx.lineTo(300,1000);
+  ctx.moveTo(200,0);
+  ctx.lineTo(200,1000);
+  ctx.strokeStyle = "rgba(0,0,0,1)"
+  ctx.stroke();
+  ctx.moveTo(0,200);
+  ctx.lineTo(1000,200);
   ctx.strokeStyle = "rgba(0,0,0,1)"
   ctx.stroke();
 }
-
-
 
 function draw(){
   ctx.rect(0,0,canvas.width, canvas.height)
@@ -138,15 +81,12 @@ function draw(){
   ctx.fill();
   grid();
   smallTriangle1.draw();
-  //rectangle.draw();
-  //smallTriangle2.draw();
-  //bigTriangle1.draw();
-  //bigTriangle2.draw();
-  //rightTriangle.draw();
-  //triangle.draw();
   firstRectangle.draw();
+  smallTriangle2.draw();
+  bigTriangle1.draw();
+  bigTriangle2.draw();
+  midTriangle.draw();
 }
-
 
 let down = false;
 let x,y;
@@ -160,16 +100,16 @@ canvas.addEventListener("mousedown", event => {
   y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
   figuresTotal.push(smallTriangle1);
   figuresTotal.push(firstRectangle);
-  //figuresTotal.push(smallTriangle2);
-  //figuresTotal.push(bigTriangle1);
-  //figuresTotal.push(bigTriangle2);
-  //figuresTotal.push(rightTriangle)
+  figuresTotal.push(smallTriangle2);
+  figuresTotal.push(bigTriangle1);
+  figuresTotal.push(bigTriangle2);
+  figuresTotal.push(midTriangle);
   console.log(x,y)
-
   for (let i = 0; i < figuresTotal.length; i++){
     isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
     if (isPointInPath){
-      figuresTotal[i].rotation += Math.PI/12;
+      figuresTotal[i].rotation += Math.PI/4;
+      console.log(((figuresTotal[i].rotation)*180)/Math.PI)
       down = true;
     }
   }
@@ -181,9 +121,10 @@ canvas.addEventListener("mousemove", event =>{
     y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
       isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
-      if (isPointInPath){
+      if (isPointInPath && down){
         figuresTotal[i].x = x;
-        figuresTotal[i].y = y;
+        figuresTotal[i].y = y;// No funciona bien en los triangulos xd
+        
       }
     }
   }
@@ -196,8 +137,9 @@ canvas.addEventListener("mouseup", event =>{
 setInterval(draw,10)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
-//Margenes posibule forma
-// Paralelogramo relfejo
+//Margenes posible forma
+//Arreglar movimiento de figuras
+//Crear json para enviar los objetos ahi
 
 
 
