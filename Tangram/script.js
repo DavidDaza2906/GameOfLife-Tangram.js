@@ -1,9 +1,12 @@
 let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
 let nRC = 10;
 let sR = canvas.height/nRC;
 let sC = canvas.width/nRC;
-class rectangle {
+
+class polygon{
   constructor(color,x,y,sideLength,rotation,name){
     this.color = color;
     this.x = x;
@@ -12,6 +15,10 @@ class rectangle {
     this.rotation = rotation;
     this.name = name;
   }
+}
+
+class rectangle extends polygon{
+
   draw(){
     this.name = new Path2D();
     const a = ((Math.PI * 2)/ 4);
@@ -22,24 +29,15 @@ class rectangle {
   ctx.fill(this.name);
   ctx.stroke(this.name)
   }
-};
-
-class triangle { 
-  constructor(color,x,y,sideLength,rotation,name){
-    this.color = color;
-    this.x = x;
-    this.y = y;
-    this.sideLength = sideLength;
-    this.rotation = rotation;
-    this.name = name
 }
 
+class triangle extends polygon {
   draw(){
     this.name = new Path2D();
     this.name.moveTo(this.x, this.y);
     this.name.lineTo(this.x + (this.sideLength*Math.cos((Math.PI/2)+ this.rotation)),this.y + (this.sideLength * Math.sin((Math.PI/2) + this.rotation)));
     this.name.lineTo(this.x + (this.sideLength * Math.cos((Math.PI*2) + this.rotation)),this.y + (this.sideLength * Math.sin((Math.PI*2) + this.rotation)));
-    this.name.lineTo(this.x,this.y)
+    this.name.lineTo(this.x,this.y);
     ctx.fillStyle = this.color;
     ctx.fill(this.name);
     ctx.lineWidth = 4
@@ -48,13 +46,33 @@ class triangle {
   }
 }
 
+class parallelogram extends polygon{
+    draw(){
+        let x2 = this.x + (this.sideLength*Math.cos((Math.PI/2) + this.rotation));
+        let y2 = this.y + (this.sideLength * Math.sin((Math.PI/2) + this.rotation));
+        this.name = new Path2D();
+        this.name.moveTo(this.x, this.y);
+        this.name.lineTo(this.x + (this.sideLength*Math.cos(Math.PI + this.rotation)), this.y + (this.sideLength * Math.sin(Math.PI + this.rotation)));
+        this.name.lineTo(x2, y2);
+        this.name.lineTo(x2 + (this.sideLength*Math.cos((Math.PI*2) + this.rotation)), y2 + (this.sideLength * Math.sin((Math.PI*2) + this.rotation)));
+        this.name.lineTo(this.x, this.y);
+        ctx.fillStyle = this.color;
+        ctx.fill(this.name);
+        ctx.lineWidth = 4
+        ctx.strokeStyle = "white"
+        ctx.stroke(this.name)
+
+    }
+}
+
+
 let firstRectangle = new rectangle("rgba(46,142,222,1)",800,600,200, Math.PI/2, 'rectangle');
 let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,400,280,7*Math.PI/4,'triangle');
 let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,600,280,Math.PI/4, 'triangle');
 let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,600,560,5*Math.PI/4,'triangle')
 let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,600,560,3*Math.PI/4,'triangle')
 let midTriangle = new triangle("rgba(150,1,16,1)",1000,1000, 400,Math.PI, 'triangle')
-
+let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,800,280,7*Math.PI/4,'parallelogram')
 function grid() {
   ctx.lineWidth = 1;
   for (let y = 0; y < nRC; y++) {
@@ -63,16 +81,6 @@ function grid() {
       ctx.strokeRect(x* sC, y * sR, sC, sR)
     }
   }
-  ctx.lineWidth = 10;
-  ctx.beginPath();
-  ctx.moveTo(200,0);
-  ctx.lineTo(200,1000);
-  ctx.strokeStyle = "rgba(0,0,0,1)"
-  ctx.stroke();
-  ctx.moveTo(0,200);
-  ctx.lineTo(1000,200);
-  ctx.strokeStyle = "rgba(0,0,0,1)"
-  ctx.stroke();
 }
 
 function draw(){
@@ -86,6 +94,7 @@ function draw(){
   bigTriangle1.draw();
   bigTriangle2.draw();
   midTriangle.draw();
+  parallelogram1.draw();
 }
 
 let down = false;
@@ -93,9 +102,10 @@ let x,y;
 let rect;
 let isPointInPath;
 let figuresTotal;
+rect = canvas.getBoundingClientRect();
 canvas.addEventListener("mousedown", event => {
+    down = true;
   figuresTotal = [];
-  rect = canvas.getBoundingClientRect();
   x= Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
   y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
   figuresTotal.push(smallTriangle1);
@@ -104,15 +114,25 @@ canvas.addEventListener("mousedown", event => {
   figuresTotal.push(bigTriangle1);
   figuresTotal.push(bigTriangle2);
   figuresTotal.push(midTriangle);
-  console.log(x,y)
+  figuresTotal.push(parallelogram1);
   for (let i = 0; i < figuresTotal.length; i++){
     isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
     if (isPointInPath){
-      figuresTotal[i].rotation += Math.PI/4;
-      console.log(((figuresTotal[i].rotation)*180)/Math.PI)
-      down = true;
+        if (event.shiftKey){
+            figuresTotal[i].rotation += Math.PI/4;
+            console.log(((figuresTotal[i].rotation)*180)/Math.PI)
+        }
+        if (down){
+            canvas.addEventListener(("mousemove"), event =>{
+
+
+
+            })
+        }
     }
+
   }
+    down = false;
 })
 
 canvas.addEventListener("mousemove", event =>{
@@ -121,25 +141,24 @@ canvas.addEventListener("mousemove", event =>{
     y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
       isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
-      if (isPointInPath && down){
-        figuresTotal[i].x = x;
-        figuresTotal[i].y = y;// No funciona bien en los triangulos xd
-        
+      if (isPointInPath){
+        figuresTotal[i].x += event.movementX;
+        figuresTotal[i].y += event.movementY;
       }
     }
   }
 })
-
 canvas.addEventListener("mouseup", event =>{
   down = false;
 })
 
-setInterval(draw,10)
+setInterval(draw,50)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posible forma
 //Arreglar movimiento de figuras
 //Crear json para enviar los objetos ahi
+//pasar los event listener a solo uno
 
 
 
