@@ -97,34 +97,29 @@ function draw(){
     for (let i = 0; i< figuresTotal.length; i++){
         figuresTotal[i].draw();
     }
-
 }
 
 let down;
-let xy;
+let x,y;
 let rect = canvas.getBoundingClientRect();
 let isPointInPath;
-function coordCalculate(event){
-    return [Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width)), Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height))];
-}
 
 canvas.addEventListener("mousemove", event => {
-    xy = coordCalculate(event);
+    x = Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
+    y = Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
-        isPointInPath = ctx.isPointInPath(figuresTotal[i].name,xy[0],xy[1])
+        isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath && down){
             figuresTotal[i].x += event.movementX;
             figuresTotal[i].y += event.movementY;
-
-
         }
-    }})
+    }
+})
 canvas.addEventListener("mousedown", event =>{
     down = true;
     if (event.shiftKey){
         for (let i = 0; i, figuresTotal.length; i++){
-            isPointInPath = ctx.isPointInPath(figuresTotal[i].name,xy[0],xy[1])
-
+            isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
             if (isPointInPath){
                 figuresTotal[i].rotation += Math.PI/4;
             }
