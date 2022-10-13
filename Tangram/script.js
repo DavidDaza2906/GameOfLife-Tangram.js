@@ -1,11 +1,3 @@
-let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext('2d');
-ctx.canvas.width = window.innerWidth;
-ctx.canvas.height = window.innerHeight;
-let nRC = 10;
-let sR = canvas.height/nRC;
-let sC = canvas.width/nRC;
-
 class polygon{
   constructor(color,x,y,sideLength,rotation,name){
     this.color = color;
@@ -18,7 +10,6 @@ class polygon{
 }
 
 class rectangle extends polygon{
-
   draw(){
     this.name = new Path2D();
     const a = ((Math.PI * 2)/ 4);
@@ -65,7 +56,13 @@ class parallelogram extends polygon{
     }
 }
 
-
+let canvas = document.getElementById("gameCanvas");
+let ctx = canvas.getContext('2d');
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
+let nRC = 10;
+let sR = canvas.height/nRC;
+let sC = canvas.width/nRC;
 let firstRectangle = new rectangle("rgba(46,142,222,1)",800,600,200, Math.PI/2, 'rectangle');
 let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,400,280,7*Math.PI/4,'triangle');
 let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,600,280,Math.PI/4, 'triangle');
@@ -73,6 +70,15 @@ let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,600,560,5*Math.PI/4,
 let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,600,560,3*Math.PI/4,'triangle')
 let midTriangle = new triangle("rgba(150,1,16,1)",1000,1000, 400,Math.PI, 'triangle')
 let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,800,280,7*Math.PI/4,'parallelogram')
+let figuresTotal = [];
+figuresTotal.push(smallTriangle1);
+figuresTotal.push(firstRectangle);
+figuresTotal.push(smallTriangle2);
+figuresTotal.push(bigTriangle1);
+figuresTotal.push(bigTriangle2);
+figuresTotal.push(midTriangle);
+figuresTotal.push(parallelogram1);
+
 function grid() {
   ctx.lineWidth = 1;
   for (let y = 0; y < nRC; y++) {
@@ -87,78 +93,58 @@ function draw(){
   ctx.rect(0,0,canvas.width, canvas.height)
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
-  grid();
-  smallTriangle1.draw();
-  firstRectangle.draw();
-  smallTriangle2.draw();
-  bigTriangle1.draw();
-  bigTriangle2.draw();
-  midTriangle.draw();
-  parallelogram1.draw();
+  //grid();
+    for (let i = 0; i< figuresTotal.length; i++){
+        figuresTotal[i].draw();
+    }
+
 }
 
-let down = false;
-let x,y;
-let rect;
+let down;
+let xy;
+let rect = canvas.getBoundingClientRect();
 let isPointInPath;
-let figuresTotal;
-rect = canvas.getBoundingClientRect();
-canvas.addEventListener("mousedown", event => {
-    down = true;
-  figuresTotal = [];
-  x= Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
-  y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
-  figuresTotal.push(smallTriangle1);
-  figuresTotal.push(firstRectangle);
-  figuresTotal.push(smallTriangle2);
-  figuresTotal.push(bigTriangle1);
-  figuresTotal.push(bigTriangle2);
-  figuresTotal.push(midTriangle);
-  figuresTotal.push(parallelogram1);
-  for (let i = 0; i < figuresTotal.length; i++){
-    isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
-    if (isPointInPath){
-        if (event.shiftKey){
-            figuresTotal[i].rotation += Math.PI/4;
-            console.log(((figuresTotal[i].rotation)*180)/Math.PI)
-        }
-        if (down){
-            canvas.addEventListener(("mousemove"), event =>{
+function coordCalculate(event){
+    return [Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width)), Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height))];
+}
 
-
-
-            })
-        }
-    }
-
-  }
-    down = false;
-})
-
-canvas.addEventListener("mousemove", event =>{
-  if (down){
-    x= Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
-    y= Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
+canvas.addEventListener("mousemove", event => {
+    xy = coordCalculate(event);
     for (let i = 0; i < figuresTotal.length; i++){
-      isPointInPath = ctx.isPointInPath(figuresTotal[i].name, x, y);
-      if (isPointInPath){
-        figuresTotal[i].x += event.movementX;
-        figuresTotal[i].y += event.movementY;
-      }
+        isPointInPath = ctx.isPointInPath(figuresTotal[i].name,xy[0],xy[1])
+        if (isPointInPath && down){
+            figuresTotal[i].x += event.movementX;
+            figuresTotal[i].y += event.movementY;
+
+
+        }
+    }})
+canvas.addEventListener("mousedown", event =>{
+    down = true;
+    if (event.shiftKey){
+        for (let i = 0; i, figuresTotal.length; i++){
+            isPointInPath = ctx.isPointInPath(figuresTotal[i].name,xy[0],xy[1])
+
+            if (isPointInPath){
+                figuresTotal[i].rotation += Math.PI/4;
+            }
+        }
     }
-  }
 })
 canvas.addEventListener("mouseup", event =>{
-  down = false;
+    down = false;
+})
+window.addEventListener("resize", event =>{
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
 })
 
-setInterval(draw,50)
+setInterval(draw,60)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posible forma
-//Arreglar movimiento de figuras
 //Crear json para enviar los objetos ahi
-//pasar los event listener a solo uno
+
 
 
 
