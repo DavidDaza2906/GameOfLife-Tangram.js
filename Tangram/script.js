@@ -151,6 +151,9 @@ canvas.addEventListener("mousemove", event => {
           figuresTotal[i].x += event.movementX;
           figuresTotal[i].y += event.movementY;
           cancelAnimationFrame(draw);
+          temp1 = square[i];
+          square.splice(i,1);
+          square.push(temp1);
         }
     }
 })
