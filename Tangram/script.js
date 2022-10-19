@@ -82,7 +82,7 @@ let ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 let firstRectangle = new rectangle("rgba(46,142,222,1)",800,400,200, Math.PI/2, 'rectangle');
-let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,200,280,7*Math.PI/4,'triangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",1000,200,280,7*Math.PI/4,'triangle');
 let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,400,280,Math.PI/4, 'triangle');
 let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,400,560,5*Math.PI/4,'triangle')
 let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,400,560,3*Math.PI/4,'triangle')
@@ -97,7 +97,9 @@ function draw(){
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
   ctx.closePath();
-    for (let i = 0; i< figuresTotal.length; i++){
+  console.log(figuresTotal[6].vertex)
+  let verification = new Set();
+    for (let i = 0; i< 7; i++){
       let vertex = new Set();
       figuresTotal[i].vertex = [];
       figuresTotal[i].draw();
@@ -111,7 +113,16 @@ function draw(){
           vertex.add(false)
         }
      }
-    }
+     if (vertex.size == 1 && vertex.has(true)) {
+        verification.add(true);
+     }
+     else{
+      verification.add(false);
+     }
+    }           
+   if (verification.size == 1 && verification.has(true)){
+    alert("Figura valida!");
+   }
   ctx.beginPath();
   ctx.strokeStyle = "white";
   ctx.moveTo(200,0);
@@ -181,7 +192,7 @@ rectangleB = [800,600,600,400,800,200,1000,400,800,600];
 bigTriangle1B = [600,400,1000,0,200,0];
 bigTriangle2B = [600,400,200,0,200,800];
 midTriangleB = [1000,800,1000,400,600,800];
-parallelogramB = [400,600,200];
+parallelogramB = [200,400,600,600,600,800,800,800];
 square.push(smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB);
 
 
