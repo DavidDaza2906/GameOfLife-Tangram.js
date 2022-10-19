@@ -114,7 +114,7 @@ function draw(){
     for (let i = 0; i< figuresTotal.length; i++){
         figuresTotal[i].draw();
     }
-  //ctx.strokeStyle = "white"
+  ctx.strokeStyle = "white"
   ctx.moveTo(200,0);
   ctx.lineTo(200,800);
   ctx.lineTo(1000,800);
@@ -129,17 +129,19 @@ let rect = canvas.getBoundingClientRect();
 let isPointInPath;
 requestAnimationFrame(draw);
 canvas.addEventListener("mousemove", event => {
+  cancelAnimationFrame(draw)
     x = Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
     y = Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath && down){
-          requestAnimationFrame(draw);
+            requestAnimationFrame(draw);
             figuresTotal[i].x += event.movementX;
             figuresTotal[i].y += event.movementY;
+            cancelAnimationFrame(draw);
+            verification();
         }
     }
-    cancelAnimationFrame(draw)
 })
 canvas.addEventListener("mousedown", event =>{
 
@@ -167,11 +169,18 @@ canvas.addEventListener("mouseup", event =>{
     down = false;
 })
 window.addEventListener("resize", event =>{
+  requestAnimationFrame(draw)
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 })
+let imgData;
+let oldData = ctx.getImageData(200,0,800,800);
+function verification(){
+  imgData = ctx.getImageData(200,0,800,800).data;
+  for (let i = 0; i< imgData.length; i+=4){
+}
 
-
+}
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posible forma
