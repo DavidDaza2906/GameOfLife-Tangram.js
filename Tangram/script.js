@@ -81,13 +81,13 @@ let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-let firstRectangle = new rectangle("rgba(46,142,222,1)",1300,200,200, Math.PI/2, 'rectangle');
-let smallTriangle1 = new triangle("rgba(241,91,96,1)",1500,200,280,7*Math.PI/4,'triangle');
-let smallTriangle2 = new triangle("rgba(57,181,160,1)",1300,600,280,Math.PI/4, 'triangle');
-let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",1500,800,560,5*Math.PI/4,'triangle')
-let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,400,560,3*Math.PI/4,'triangle')
-let midTriangle = new triangle("rgba(150,1,16,1)",1000,800, 400,Math.PI, 'triangle')
-let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,600,280,7*Math.PI/4,'parallelogram',1)
+let firstRectangle = new rectangle("rgba(46,142,222,1)",940,320,160, Math.PI/2, 'rectangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",840,160,225,7*Math.PI/4,'triangle');
+let smallTriangle2 = new triangle("rgba(57,181,160,1)",680,320,225,Math.PI/4, 'triangle');
+let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",680,320,450,5*Math.PI/4,'triangle')
+let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",680,320,450,3*Math.PI/4,'triangle')
+let midTriangle = new triangle("rgba(150,1,16,1)",1000,642, 320,Math.PI, 'triangle')
+let parallelogram1 = new parallelogram("rgba(241,100,260,1)",523,482,225,7*Math.PI/4,'parallelogram',1)
 let figuresTotal = [];
 figuresTotal.push(smallTriangle1,smallTriangle2, firstRectangle, bigTriangle1, bigTriangle2, midTriangle, parallelogram1);
 
@@ -124,11 +124,11 @@ function draw(){
    }
   ctx.beginPath();
   ctx.strokeStyle = "white";
-  ctx.moveTo(200,0);
-  ctx.lineTo(200,800);
-  ctx.lineTo(1000,800);
+  ctx.moveTo(360,0);
+  ctx.lineTo(360,645);
+  ctx.lineTo(1000,645);
   ctx.lineTo(1000,0);
-  ctx.lineTo(200,0);
+  ctx.lineTo(360,0);
   ctx.stroke();
   ctx.closePath();
 }
@@ -191,13 +191,13 @@ window.addEventListener("resize", event =>{
 requestAnimationFrame(draw);
 let square = []
 let smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB;
-smallTriangle1B = [800,200, 1000,400,1000,0];
-smallTriangle2B = [600,400,400,600,800,600]
-rectangleB = [800,600,600,400,800,200,1000,400,800,600];
-bigTriangle1B = [600,400,1000,0,200,0];
-bigTriangle2B = [600,400,200,0,200,800];
-midTriangleB = [1000,800,1000,400,600,800];
-parallelogramB = [200,400,600,600,600,800,800,800];
+smallTriangle1B = [ 0.9009742330266022, 160, 319.0990257669731, 840, 999.099025766973, 999.0990257669732 ]
+smallTriangle2B = [ 320, 479.0990257669731, 479.0990257669732, 520.9009742330268, 680, 839.0990257669732 ]
+rectangleB = [ 160, 319.99999999999994, 320, 480, 480, 680, 840, 840, 840, 1000 ]
+bigTriangle1B = [ 1.8019484660534317, 1.8019484660535454, 320, 361.8019484660538, 680, 998.1980515339462 ];
+bigTriangle2B = [ 1.801948466053659, 320, 361.80194846605355, 361.801948466054, 638.1980515339467, 680 ];
+midTriangleB =  [ 322, 642, 642.0000000000001, 680, 999.9999999999999, 1000 ];
+parallelogramB = [ 363.900974233027, 481.9999999999997, 482, 523, 641.0990257669731, 641.0990257669733, 682.0990257669732, 841.1980515339462 ];
 square.push(smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB);
 
 
