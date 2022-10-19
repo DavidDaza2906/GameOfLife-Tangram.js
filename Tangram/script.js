@@ -80,16 +80,13 @@ let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-let nRC = 10;
-let sR = canvas.height/nRC;
-let sC = canvas.width/nRC;
-let firstRectangle = new rectangle("rgba(46,142,222,1)",800,600,200, Math.PI/2, 'rectangle');
-let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,400,280,7*Math.PI/4,'triangle');
-let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,600,280,Math.PI/4, 'triangle');
-let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,600,560,5*Math.PI/4,'triangle')
-let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,600,560,3*Math.PI/4,'triangle')
-let midTriangle = new triangle("rgba(150,1,16,1)",1000,1000, 400,Math.PI, 'triangle')
-let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,800,280,7*Math.PI/4,'parallelogram',false)
+let firstRectangle = new rectangle("rgba(46,142,222,1)",800,400,200, Math.PI/2, 'rectangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",800,200,280,7*Math.PI/4,'triangle');
+let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,400,280,Math.PI/4, 'triangle');
+let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,400,560,5*Math.PI/4,'triangle')
+let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,400,560,3*Math.PI/4,'triangle')
+let midTriangle = new triangle("rgba(150,1,16,1)",1000,800, 400,Math.PI, 'triangle')
+let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,600,280,7*Math.PI/4,'parallelogram',false)
 let figuresTotal = [];
 figuresTotal.push(smallTriangle1);
 figuresTotal.push(firstRectangle);
@@ -117,27 +114,35 @@ function draw(){
     for (let i = 0; i< figuresTotal.length; i++){
         figuresTotal[i].draw();
     }
-
-
+  //ctx.strokeStyle = "white"
+  ctx.moveTo(200,0);
+  ctx.lineTo(200,800);
+  ctx.lineTo(1000,800);
+  ctx.lineTo(1000,0);
+  ctx.lineTo(200,0)
+  ctx.stroke()
 }
 
 let down;
 let x,y;
 let rect = canvas.getBoundingClientRect();
 let isPointInPath;
-
+requestAnimationFrame(draw);
 canvas.addEventListener("mousemove", event => {
     x = Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
     y = Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath && down){
+          requestAnimationFrame(draw);
             figuresTotal[i].x += event.movementX;
             figuresTotal[i].y += event.movementY;
         }
     }
+    cancelAnimationFrame(draw)
 })
 canvas.addEventListener("mousedown", event =>{
+
   console.log(x,y);
     down = true;
     if (event.shiftKey){
@@ -155,7 +160,9 @@ canvas.addEventListener("mousedown", event =>{
             figuresTotal[i].reversed = !figuresTotal[i].reversed;
 
     }
-}}})
+}}
+
+})
 canvas.addEventListener("mouseup", event =>{
     down = false;
 })
@@ -165,8 +172,6 @@ window.addEventListener("resize", event =>{
 })
 
 
-
-setInterval(draw,100)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posible forma
