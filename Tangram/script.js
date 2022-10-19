@@ -81,10 +81,10 @@ let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-let firstRectangle = new rectangle("rgba(46,142,222,1)",800,400,200, Math.PI/2, 'rectangle');
-let smallTriangle1 = new triangle("rgba(241,91,96,1)",1000,200,280,7*Math.PI/4,'triangle');
-let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,400,280,Math.PI/4, 'triangle');
-let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,400,560,5*Math.PI/4,'triangle')
+let firstRectangle = new rectangle("rgba(46,142,222,1)",1300,200,200, Math.PI/2, 'rectangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",1500,200,280,7*Math.PI/4,'triangle');
+let smallTriangle2 = new triangle("rgba(57,181,160,1)",1300,600,280,Math.PI/4, 'triangle');
+let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",1500,800,560,5*Math.PI/4,'triangle')
 let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,400,560,3*Math.PI/4,'triangle')
 let midTriangle = new triangle("rgba(150,1,16,1)",1000,800, 400,Math.PI, 'triangle')
 let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,600,280,7*Math.PI/4,'parallelogram',1)
@@ -97,7 +97,6 @@ function draw(){
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
   ctx.closePath();
-  console.log(figuresTotal[6].vertex)
   let verification = new Set();
     for (let i = 0; i< 7; i++){
       let vertex = new Set();
@@ -145,10 +144,13 @@ canvas.addEventListener("mousemove", event => {
     for (let i = 0; i < figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath && down){
-            requestAnimationFrame(draw);
-            figuresTotal[i].x += event.movementX;
-            figuresTotal[i].y += event.movementY;
-            cancelAnimationFrame(draw);
+          temp = figuresTotal[i];
+          figuresTotal.splice(i,1);
+          figuresTotal.push(temp);
+          requestAnimationFrame(draw);
+          figuresTotal[i].x += event.movementX;
+          figuresTotal[i].y += event.movementY;
+          cancelAnimationFrame(draw);
         }
     }
 })
