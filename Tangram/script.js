@@ -89,7 +89,7 @@ let smallTriangle2 = new triangle("rgba(57,181,160,1)",600,600,280,Math.PI/4, 't
 let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",600,600,560,5*Math.PI/4,'triangle')
 let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",600,600,560,3*Math.PI/4,'triangle')
 let midTriangle = new triangle("rgba(150,1,16,1)",1000,1000, 400,Math.PI, 'triangle')
-let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,500,280,0,'parallelogram',false)
+let parallelogram1 = new parallelogram("rgba(241,100,260,1)",400,800,280,7*Math.PI/4,'parallelogram',false)
 let figuresTotal = [];
 figuresTotal.push(smallTriangle1);
 figuresTotal.push(firstRectangle);
@@ -117,6 +117,8 @@ function draw(){
     for (let i = 0; i< figuresTotal.length; i++){
         figuresTotal[i].draw();
     }
+
+
 }
 
 let down;
@@ -162,7 +164,9 @@ window.addEventListener("resize", event =>{
     ctx.canvas.height = window.innerHeight;
 })
 
-setInterval(draw,60)
+
+
+setInterval(draw,100)
 //Colisionar figuras
 //Verificar distintas formas de solucionar
 //Margenes posible forma
