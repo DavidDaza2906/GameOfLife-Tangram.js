@@ -81,24 +81,52 @@ let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-let firstRectangle = new rectangle("rgba(46,142,222,1)",940,320,160, Math.PI/2, 'rectangle');
-let smallTriangle1 = new triangle("rgba(241,91,96,1)",840,160,225,7*Math.PI/4,'triangle');
-let smallTriangle2 = new triangle("rgba(57,181,160,1)",680,320,225,Math.PI/4, 'triangle');
-let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",680,320,450,5*Math.PI/4,'triangle')
-let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",680,320,450,3*Math.PI/4,'triangle')
-let midTriangle = new triangle("rgba(150,1,16,1)",1000,642, 320,Math.PI, 'triangle')
-let parallelogram1 = new parallelogram("rgba(241,100,260,1)",523,482,225,7*Math.PI/4,'parallelogram',1)
+let firstRectangle = new rectangle("rgba(46,142,222,1)",474,115,160, Math.PI/2, 'rectangle');
+let smallTriangle1 = new triangle("rgba(241,91,96,1)",590,624,225,7*Math.PI/4,'triangle');
+let smallTriangle2 = new triangle("rgba(57,181,160,1)",590,623,225,Math.PI/4, 'triangle');
+let bigTriangle1 = new triangle("rgba(164, 146, 234,1)",680,146,450,5*Math.PI/4,'triangle')
+let bigTriangle2 = new triangle("rgba(193, 212, 94,1)",460,460,450,3*Math.PI/4,'triangle')
+let midTriangle = new triangle("rgba(150,1,16,1)",140,450, 320,Math.PI, 'triangle')
+let parallelogram1 = new parallelogram("rgba(241,100,260,1)",366,455,225,7*Math.PI/4,'parallelogram',0)
 let figuresTotal = [];
 figuresTotal.push(smallTriangle1,smallTriangle2, firstRectangle, bigTriangle1, bigTriangle2, midTriangle, parallelogram1);
+let currentScreen = requestAnimationFrame(welcomeScreen);
+function welcomeScreen(){
+  ctx.rect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle= '#1a1a23';
+  ctx.fill();
+  ctx.font = '90px serif';
+  ctx.strokeStyle = "white";
+  ctx.strokeText("Tangram",canvas.width/4,canvas.height/4);
+  ctx.fillStyle = "white";
+  ctx.font = "50px serif";
+  ctx.fillText("Presiona Space para jugar",canvas.width/4,canvas.height/2.5);
+  ctx.fillText("Presiona S para entrar en modo creador", canvas.width/4, canvas.height/2);
+  ctx.fillText("Presiona G para guardar y W para restaurar", canvas.width/4,canvas.height/1.7);
 
-function draw(){
-  ctx.beginPath();
+}
+function creador(){
+  ctx.rect(0,0,canvas.width,canvas.heigth);
+  ctx.fillStyle= '#1a1a23';
+  ctx.fill();
+
+  for (let i = 0; i<figuresTotal.length; i++){
+    figuresTotal[i].draw();
+    }
+}
+function random(){
+  for (let i = 0; i<figuresTotal.length;i++){
+    figuresTotal[i].x = Math.random() * canvas.width;
+    figuresTotal[i].y = Math.random() * canvas.height;
+  }
+}
+
+function game(){
   ctx.rect(0,0,canvas.width, canvas.height)
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
-  ctx.closePath();
   let verification = new Set();
-    for (let i = 0; i< 7; i++){
+    for (let i = 0; i< figuresTotal.length; i++){
       let vertex = new Set();
       figuresTotal[i].vertex = [];
       figuresTotal[i].draw();
@@ -107,6 +135,9 @@ function draw(){
       for (let j = 0; j< figuresTotal[i].vertex.length; j++){
         if (square[i][j] -10 < figuresTotal[i].vertex[j] && square[i][j] + 10 > figuresTotal[i].vertex[j]){
           vertex.add(true)
+        }
+        else if (house[i][j] -20 < figuresTotal[i].vertex[j] && house[i][j] + 20 > figuresTotal[i].vertex[j]){
+        vertex.add(true)
         }
         else {
           vertex.add(false)
@@ -122,38 +153,34 @@ function draw(){
    if (verification.size == 1 && verification.has(true)){
     alert("Figura valida!");
    }
-  ctx.beginPath();
   ctx.strokeStyle = "white";
-  ctx.moveTo(360,0);
-  ctx.lineTo(360,645);
-  ctx.lineTo(1000,645);
-  ctx.lineTo(1000,0);
-  ctx.lineTo(360,0);
-  ctx.stroke();
-  ctx.closePath();
+  squareBorder = new Path2D();
+  squareBorder.moveTo(360,0);
+  squareBorder.lineTo(360,645);
+  squareBorder.lineTo(1000,645);
+  squareBorder.lineTo(1000,0);
+  squareBorder.lineTo(360,0);
+  ctx.stroke(squareBorder);
 }
 
 let down;
 let x,y;
 let rect = canvas.getBoundingClientRect();
 let isPointInPath;
+let savedFiguresX = [];
+let savedFiguresY = [];
+let tempFigures = [];
 canvas.addEventListener("mousemove", event => {
-  cancelAnimationFrame(draw);
+  cancelAnimationFrame(currentScreen);
     x = Math.floor(((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width));
     y = Math.floor(((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height));
     for (let i = 0; i < figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath && down){
-          temp = figuresTotal[i];
-          figuresTotal.splice(i,1);
-          figuresTotal.push(temp);
-          requestAnimationFrame(draw);
+          requestAnimationFrame(currentScreen);
           figuresTotal[i].x += event.movementX;
           figuresTotal[i].y += event.movementY;
-          cancelAnimationFrame(draw);
-          temp1 = square[i];
-          square.splice(i,1);
-          square.push(temp1);
+          cancelAnimationFrame(currentScreen);
         }
     }
 })
@@ -164,7 +191,7 @@ canvas.addEventListener("mousedown", event =>{
         for (let i = 0; i, figuresTotal.length; i++){
             isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y);
             if (isPointInPath){
-              requestAnimationFrame(draw);
+              requestAnimationFrame(currentScreen);
                 figuresTotal[i].rotation += Math.PI/4;
             }
         }
@@ -173,22 +200,61 @@ canvas.addEventListener("mousedown", event =>{
       for (let i = 0; i, figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath){
-          requestAnimationFrame(draw);
+          requestAnimationFrame(currentScreen);
             figuresTotal[i].reversed = !figuresTotal[i].reversed;
 
     }
 }}
-
 })
 canvas.addEventListener("mouseup", event =>{
     down = false;
 })
+document.addEventListener('keydown', event => {
+  switch(event.key){
+    case ' ':
+      random();
+      currentScreen = game;
+      requestAnimationFrame(currentScreen);
+      break;
+    case 's':
+      random();
+      currentScreen = creador;
+      requestAnimationFrame(currentScreen);
+      break;
+    case 'p':
+      currentScreen = welcomeScreen;
+      requestAnimationFrame(currentScreen);
+      break;
+    case 'r':
+      random();
+      break;
+    case 'g':
+      savedFiguresX = [];
+      savedFiguresY = [];
+      tempFigures = figuresTotal;
+      for (let i = 0; i<figuresTotal.length;i++){
+        savedFiguresX.push(figuresTotal[i].x);
+        savedFiguresY.push(figuresTotal[i].y);
+      }
+      break;
+    case 'w':
+      figuresTotal = tempFigures;
+     for (let i = 0; i<figuresTotal.length;i++){
+      figuresTotal[i].x = savedFiguresX[i];
+      figuresTotal[i].y = savedFiguresY[i];
+      }
+      requestAnimationFrame(currentScreen)
+      break;
+    
+    }
+})
 window.addEventListener("resize", event =>{
-    requestAnimationFrame(draw);
+    requestAnimationFrame(currentScreen);
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 })
-requestAnimationFrame(draw);
+
+requestAnimationFrame(welcomeScreen);
 let square = []
 let smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB;
 smallTriangle1B = [ 0.9009742330266022, 160, 319.0990257669731, 840, 999.099025766973, 999.0990257669732 ]
@@ -201,10 +267,14 @@ parallelogramB = [ 363.900974233027, 481.9999999999997, 482, 523, 641.0990257669
 square.push(smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB);
 
 let house = [];
-hsT1 = [360, 360.0000000000001, 457.99999999999983, 458, 680, 778 ];
-hsT2 = [ 357.801948466054, 449, 676, 767.1980515339465, 767.1980515339467, 994.1980515339462 ];
-hR = [ 1.8629150101523635, 1.8629150101524061, 228.13708498984758, 228.1370849898476, 228.13708498984772, 586.8629150101524, 586.8629150101524, 586.8629150101525, 813.1370849898476, 813.1370849898476 ];
-
+hsT2 =  [ 430.9009742330269, 463.9009742330267, 463.9009742330268, 590, 623, 749.0990257669731 ];
+hsT1 =[ 464.9009742330266, 590, 624, 749.099025766973, 749.0990257669732, 783.0990257669731 ];
+hR =  [ 3.8629150101523635, 3.862915010152406, 230.13708498984758, 230.1370849898476, 230.13708498984772, 360.8629150101524, 360.8629150101524, 360.8629150101525, 587.1370849898476, 587.1370849898476]
+hbT1 = [ 127, 363.801948466054, 445.1980515339465, 445.19805153394674, 682, 1000.1980515339462 ]
+hbT2 = [ 141.801948466054, 447, 460, 765.1980515339465, 765.1980515339467, 778.1980515339462 ];
+hmT = [  138, 138.00000000000009, 448.99999999999983, 449, 458, 769 ];
+hP = [  140, 225, 225.0000000000001, 365, 365.00000000000006, 449.99999999999994, 450, 590 ]
+house.push(hsT1,hsT2, hR, hbT1, hbT2, hmT, hP)
 
 //Colisionar figuras
 
