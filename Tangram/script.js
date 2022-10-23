@@ -163,6 +163,8 @@ function game(){
   ctx.stroke(squareBorder);
 }
 
+function colliding(){};
+ 
 let down;
 let x,y;
 let rect = canvas.getBoundingClientRect();
@@ -257,6 +259,7 @@ window.addEventListener("resize", event =>{
 requestAnimationFrame(welcomeScreen);
 let square = []
 let smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB;
+let smallTrianglesB, bigTrianglesB;
 smallTriangle1B = [ 0.9009742330266022, 160, 319.0990257669731, 840, 999.099025766973, 999.0990257669732 ]
 smallTriangle2B = [ 320, 479.0990257669731, 479.0990257669732, 520.9009742330268, 680, 839.0990257669732 ]
 rectangleB = [ 160, 319.99999999999994, 320, 480, 480, 680, 840, 840, 840, 1000 ]
@@ -264,7 +267,9 @@ bigTriangle1B = [ 1.8019484660534317, 1.8019484660535454, 320, 361.8019484660538
 bigTriangle2B = [ 1.801948466053659, 320, 361.80194846605355, 361.801948466054, 638.1980515339467, 680 ];
 midTriangleB =  [ 322, 642, 642.0000000000001, 680, 999.9999999999999, 1000 ];
 parallelogramB = [ 363.900974233027, 481.9999999999997, 482, 523, 641.0990257669731, 641.0990257669733, 682.0990257669732, 841.1980515339462 ];
-square.push(smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB);
+smallTrianglesB = smallTriangle1B.concat(smallTriangle2B); 
+bigTrianglesB = bigTriangle1B.concat(bigTriangle2B);
+square.push(smallTrianglesB, rectangleB, bigTrianglesB, midTriangleB, parallelogramB);
 
 let house = [];
 hsT2 =  [ 430.9009742330269, 463.9009742330267, 463.9009742330268, 590, 623, 749.0990257669731 ];
@@ -274,7 +279,9 @@ hbT1 = [ 127, 363.801948466054, 445.1980515339465, 445.19805153394674, 682, 1000
 hbT2 = [ 141.801948466054, 447, 460, 765.1980515339465, 765.1980515339467, 778.1980515339462 ];
 hmT = [  138, 138.00000000000009, 448.99999999999983, 449, 458, 769 ];
 hP = [  140, 225, 225.0000000000001, 365, 365.00000000000006, 449.99999999999994, 450, 590 ]
-house.push(hsT1,hsT2, hR, hbT1, hbT2, hmT, hP)
+hsTs = hsT1.concat(hsT2);
+hbTs = hbT1.concat(hbT2);
+house.push(hsTs, hR, hbTs, hmT, hP)
 
 //Colisionar figuras
 
