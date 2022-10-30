@@ -7,7 +7,8 @@ class polygon{
     this.rotation = rotation;
     this.name = name;
     this.reversed = reversed;
-    this.vertex = [];
+    this.vertexX = [];
+    this.vertexY = [];
     this.x1;this.x2;this.y1;this.y2;this.x3;this.y3;
   }
 }
@@ -19,7 +20,8 @@ class rectangle extends polygon{
     for (let i = 0; i < 5; i++) {
       this.x1 = this.x + (this.sideLength * Math.cos(a*i+this.rotation));
       this.y1 = this.y + (this.sideLength * Math.sin(a*i+this.rotation));
-      this.vertex.push(this.x1,this.y1);
+      this.vertexX.push(this.x1);
+      this.vertexY.push(this.y1);
       this.name.lineTo(this.x1,this.y1);
     }
   ctx.fillStyle = this.color;
@@ -31,15 +33,18 @@ class rectangle extends polygon{
 class triangle extends polygon {
   draw(){
     this.name = new Path2D();
-    this.vertex.push(this.x, this.y);
+    this.vertexX.push(this.x);
+    this.vertexY.push(this.y);
     this.name.moveTo(this.x, this.y);
     this.x1 = this.x + (this.sideLength*Math.cos((Math.PI/2)+ this.rotation));
     this.y1 = this.y + (this.sideLength * Math.sin((Math.PI/2) + this.rotation));
-    this.vertex.push(this.x1,this.y1);
+    this.vertexX.push(this.x1);
+    this.vertexY.push(this.y1);
     this.name.lineTo(this.x1,this.y1);
     this.x2 = this.x + (this.sideLength * Math.cos((Math.PI*2) + this.rotation));
     this.y2 = this.y + (this.sideLength * Math.sin((Math.PI*2) + this.rotation));
-    this.vertex.push(this.x2,this.y2);
+    this.vertexX.push(this.x2);
+    this.vertexY.push(this.y2);
     this.name.lineTo(this.x2,this.y2);
     this.name.lineTo(this.x,this.y);
     ctx.fillStyle = this.color;
@@ -58,17 +63,21 @@ class parallelogram extends polygon{
     this.y2 = this.y + (this.sideLength * (Math.sin((Math.PI/2)*rev + this.rotation*rev)));
     this.name = new Path2D();
     this.name.moveTo(this.x, this.y);
-    this.vertex.push(this.x,this.y);
+    this.vertexX.push(this.x);
+    this.vertexY.push(this.y);
     this.x1 = this.x + (this.sideLength*Math.cos(Math.PI*rev + this.rotation*rev));
     this.y1 = this.y + (this.sideLength * Math.sin(Math.PI*rev + this.rotation*rev));
-    this.vertex.push(this.x1, this.y1);
+    this.vertexX.push(this.x1);
+    this.vertexY.push(this.y1);
     this.name.lineTo(this.x1,this.y1);
     this.name.lineTo(this.x2, this.y2);
-    this.vertex.push(this.x2,this.y2);
+    this.vertexX.push(this.x2);
+    this.vertexY.push(this.y2);
     this.x3 = this.x2 + (this.sideLength*Math.cos((Math.PI*2)*rev+ this.rotation*rev));
     this.y3 = this.y2 + (this.sideLength * Math.sin((Math.PI*2)*rev + this.rotation*rev));
     this.name.lineTo(this.x3, this.y3);
-    this.vertex.push(this.x3,this.y3);
+    this.vertexX.push(this.x3);
+    this.vertexY.push(this.y3);
     this.name.lineTo(this.x, this.y);
     ctx.fillStyle = this.color;
     ctx.fill(this.name);
@@ -78,7 +87,7 @@ class parallelogram extends polygon{
 }
 
 let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d', {alpha: false});
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 let firstRectangle = new rectangle("rgba(46,142,222,1)",474,115,160, Math.PI/2, 'rectangle');
@@ -106,7 +115,7 @@ function welcomeScreen(){
 
 }
 function creador(){
-  ctx.rect(0,0,canvas.width,canvas.heigth);
+  ctx.rect(0,0,canvas.width,canvas.height);
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
   for (let i = 0; i<figuresTotal.length; i++){
@@ -119,26 +128,43 @@ function random(){
     figuresTotal[i].y = Math.random() * canvas.height;
   }
 }
-
+let currentLevelX,currentLevel,currentLevelY;
+let totalVertexX,totalVertexY;
 function game(){
   ctx.rect(0,0,canvas.width, canvas.height)
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
+  squareBorder = new Path2D();
+  squareBorder.moveTo(360,0);
+  squareBorder.lineTo(360,645);
+  squareBorder.lineTo(1000,645);
+  squareBorder.lineTo(1000,0);
+  squareBorder.lineTo(360,0);
+  ctx.strokeStyle = "white";
+  ctx.stroke(squareBorder);
+  ctx.fill(squareBorder)
   let verification = new Set();
-    for (let i = 0; i< figuresTotal.length; i++){
-      let vertex = new Set();
-      figuresTotal[i].vertex = [];
-      figuresTotal[i].draw();
-      figuresTotal[i].vertex.sort(function(a,b){return  a-b});
-      square[i].sort(function(a,b){return  a-b});
-      for (let j = 0; j< figuresTotal[i].vertex.length; j++){
-        if (square[i][j] -10 < figuresTotal[i].vertex[j] && square[i][j] + 10 > figuresTotal[i].vertex[j]){
-          vertex.add(true)
-        }
-        else if (house[i][j] -20 < figuresTotal[i].vertex[j] && house[i][j] + 20 > figuresTotal[i].vertex[j]){
+  totalVertexX = [];
+  totalVertexY = [];
+  for (let i = 0; i< figuresTotal.length; i++){
+    figuresTotal[i].vertexX = [];
+    figuresTotal[i].vertexY = [];
+    figuresTotal[i].draw();
+    for (let j = 0; j< figuresTotal[i].vertexX.length; j++){
+      totalVertexX.push(figuresTotal[i].vertexX[j]);
+      totalVertexY.push(figuresTotal[i].vertexY[j]);}
+    }
+    let vertex = new Set();
+    totalVertexX.sort(function(a,b){return  a-b});
+    totalVertexY.sort(function(a,b){return a-b});
+    for (let i = 0; i< totalVertexX.length; i++){ 
+      if (currentLevelX[i] -10 < totalVertexX[i] && currentLevelX[i] + 10 > totalVertexX[i]){
         vertex.add(true)
         }
-        else {
+      if (currentLevelY[i] -10 < totalVertexY[i] && currentLevelY[i] + 10 > totalVertexY[i]){
+        vertex.add(true)
+      }
+      else {
           vertex.add(false)
         }
      }
@@ -147,23 +173,17 @@ function game(){
      }
      else{
       verification.add(false);
-     }
-    }           
+     }          
    if (verification.size == 1 && verification.has(true)){
     alert("Figura valida!");
    }
-  ctx.strokeStyle = "white";
-  squareBorder = new Path2D();
-  squareBorder.moveTo(360,0);
-  squareBorder.lineTo(360,645);
-  squareBorder.lineTo(1000,645);
-  squareBorder.lineTo(1000,0);
-  squareBorder.lineTo(360,0);
-  ctx.stroke(squareBorder);
-}
+  }
 
 function colliding(){};
- 
+
+function drawSaved(){
+
+};
 let down;
 let x,y;
 let rect = canvas.getBoundingClientRect();
@@ -182,39 +202,36 @@ canvas.addEventListener("mousemove", event => {
           figuresTotal[i].x += event.movementX;
           figuresTotal[i].y += event.movementY;
           cancelAnimationFrame(currentScreen);
-        }
-    }
-})
+}}})
 canvas.addEventListener("mousedown", event =>{
-  console.log(x,y);
-    down = true;
+  cancelAnimationFrame(currentScreen);
+  down = true;
     if (event.shiftKey){
         for (let i = 0; i, figuresTotal.length; i++){
             isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y);
             if (isPointInPath){
               requestAnimationFrame(currentScreen);
                 figuresTotal[i].rotation += Math.PI/4;
-            }
-        }
-    }
+}}}
     else if (event.ctrlKey){
       for (let i = 0; i, figuresTotal.length; i++){
         isPointInPath = ctx.isPointInPath(figuresTotal[i].name,x,y)
         if (isPointInPath){
           requestAnimationFrame(currentScreen);
             figuresTotal[i].reversed = !figuresTotal[i].reversed;
-
-    }
-}}
-})
+}}}})
 canvas.addEventListener("mouseup", event =>{
     down = false;
+    cancelAnimationFrame(currentScreen)
 })
 document.addEventListener('keydown', event => {
+  cancelAnimationFrame(currentScreen)
   switch(event.key){
     case ' ':
       random();
       currentScreen = game;
+      currentLevelX = squareX;
+      currentLevelY = squareY;
       requestAnimationFrame(currentScreen);
       break;
     case 's':
@@ -246,29 +263,76 @@ document.addEventListener('keydown', event => {
       }
       requestAnimationFrame(currentScreen)
       break;
-    
-    }
-})
+    case 'x':
+      currentLevelX = squareX;
+      currentLevelY = squareY;
+      console.log("square")
+      break;
+    case 'y':
+      for (let i = 0; i<totalVertexX.length; i++){
+        console.log(totalVertexY[i])
+      }
+      break;
+}})
 window.addEventListener("resize", event =>{
+    cancelAnimationFrame(currentScreen)
     requestAnimationFrame(currentScreen);
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+   // ctx.canvas.width = window.innerWidth;
+    //ctx.canvas.height = window.innerHeight;
 })
-
 requestAnimationFrame(welcomeScreen);
-let square = []
-let smallTriangle1B, smallTriangle2B, rectangleB, bigTriangle1B, bigTriangle2B, midTriangleB, parallelogramB;
-let smallTrianglesB, bigTrianglesB;
-smallTriangle1B = [ 0.9009742330266022, 160, 319.0990257669731, 840, 999.099025766973, 999.0990257669732 ]
-smallTriangle2B = [ 320, 479.0990257669731, 479.0990257669732, 520.9009742330268, 680, 839.0990257669732 ]
-rectangleB = [ 160, 319.99999999999994, 320, 480, 480, 680, 840, 840, 840, 1000 ]
-bigTriangle1B = [ 1.8019484660534317, 1.8019484660535454, 320, 361.8019484660538, 680, 998.1980515339462 ];
-bigTriangle2B = [ 1.801948466053659, 320, 361.80194846605355, 361.801948466054, 638.1980515339467, 680 ];
-midTriangleB =  [ 322, 642, 642.0000000000001, 680, 999.9999999999999, 1000 ];
-parallelogramB = [ 363.900974233027, 481.9999999999997, 482, 523, 641.0990257669731, 641.0990257669733, 682.0990257669732, 841.1980515339462 ];
-smallTrianglesB = smallTriangle1B.concat(smallTriangle2B); 
-bigTrianglesB = bigTriangle1B.concat(bigTriangle2B);
-square.push(smallTrianglesB, rectangleB, bigTrianglesB, midTriangleB, parallelogramB);
+let squareX = [
+  360.0221681751368,
+  360.02216817513727,
+  361.8280641946078,
+  363.5233637997383,
+  519.4273840894189,
+  522.6223895667115,
+  678.2202197090833,
+  679.4273840894189,
+  679.4273840894189,
+  679.4273840894189,
+  679.7967889127735,
+  680.026115728554,
+  680.3653247074835,
+  681.7214153336847,
+  838.8958146797465,
+  838.8958146797468,
+  839.4273840894189,
+  839.4832788769946,
+  839.4832788769947,
+  998.2241672625003,
+  998.5823046439677,
+  998.5823046439679,
+  1000.3653247074834,
+  1000.3653247074835
+]
+let squareY = [
+6.602991669741982,
+6.602991669742096,
+7.711586572584565,
+10.15124583955793,
+169.2502716065312,
+170.03147239712558,
+324.80104320368855,
+325.9096381065309,
+328.1231365162971,
+328.34929737350456,
+329.04671421258104,
+329.130498164099,
+486.2308648952268,
+487.44832314047784,
+488.12313651629705,
+488.1231365162971,
+488.2295239310721,
+644.1076896404777,
+645.3298906621999,
+645.3298906622,
+648.1231365162971,
+648.1231365162971,
+649.046714212581,
+649.0467142125812
+]
 
 let house = [];
 hsT2 =  [ 430.9009742330269, 463.9009742330267, 463.9009742330268, 590, 623, 749.0990257669731 ];
