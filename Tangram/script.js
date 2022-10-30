@@ -109,7 +109,6 @@ function creador(){
   ctx.rect(0,0,canvas.width,canvas.heigth);
   ctx.fillStyle= '#1a1a23';
   ctx.fill();
-
   for (let i = 0; i<figuresTotal.length; i++){
     figuresTotal[i].draw();
     }
@@ -230,7 +229,7 @@ document.addEventListener('keydown', event => {
     case 'r':
       random();
       break;
-    case 'g':
+    case 'g': //Dejarlo solo para modo creador
       savedFiguresX = [];
       savedFiguresY = [];
       tempFigures = figuresTotal;
@@ -239,7 +238,7 @@ document.addEventListener('keydown', event => {
         savedFiguresY.push(figuresTotal[i].y);
       }
       break;
-    case 'w':
+    case 'w': // dejarlo solo para modo creador
       figuresTotal = tempFigures;
      for (let i = 0; i<figuresTotal.length;i++){
       figuresTotal[i].x = savedFiguresX[i];
