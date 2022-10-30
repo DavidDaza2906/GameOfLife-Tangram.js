@@ -102,7 +102,7 @@ figuresTotal.push(smallTriangle1,smallTriangle2, firstRectangle, bigTriangle1, b
 let currentScreen = requestAnimationFrame(welcomeScreen);
 function welcomeScreen(){
   ctx.rect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle= '#1a1a23';
+  ctx.fillStyle= 'rgba(26,26,35,1)';
   ctx.fill();
   ctx.font = '90px serif';
   ctx.strokeStyle = "white";
@@ -116,7 +116,7 @@ function welcomeScreen(){
 }
 function creador(){
   ctx.rect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle= '#1a1a23';
+  ctx.fillStyle= 'rgba(26,26,35,1)';
   ctx.fill();
   for (let i = 0; i<figuresTotal.length; i++){
     figuresTotal[i].draw();
@@ -132,7 +132,7 @@ let currentLevelX,currentLevel,currentLevelY;
 let totalVertexX,totalVertexY;
 function game(){
   ctx.rect(0,0,canvas.width, canvas.height)
-  ctx.fillStyle= '#1a1a23';
+  ctx.fillStyle= 'rgba(26,26,35,1)';
   ctx.fill();
   squareBorder = new Path2D();
   squareBorder.moveTo(360,0);
@@ -224,6 +224,7 @@ canvas.addEventListener("mouseup", event =>{
     down = false;
     cancelAnimationFrame(currentScreen)
 })
+let savedFigure;
 document.addEventListener('keydown', event => {
   cancelAnimationFrame(currentScreen)
   switch(event.key){
@@ -269,6 +270,14 @@ document.addEventListener('keydown', event => {
       console.log("square")
       break;
     case 'y':
+      savedFigure = ctx.getImageData(0,0,canvas.width,canvas.height)
+      for (let i = 0; i<savedFigure.data.length; i+=4){
+        savedFigure.data[i] = 255-savedFigure.data[i];
+        savedFigure.data[i+1] = 255-savedFigure.data[i+1];
+        savedFigure.data[i+2] = 255- savedFigure.data[i+2];
+        savedFigure.data[i+3] = 255;
+      }
+      ctx.putImageData(savedFigure,0,0)
       for (let i = 0; i<totalVertexX.length; i++){
         console.log(totalVertexY[i])
       }
