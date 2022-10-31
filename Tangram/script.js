@@ -98,7 +98,7 @@ function welcomeScreen(){
   ctx.fillStyle = "white";
   ctx.font = "50px serif";
   ctx.fillText("Presiona Space para jugar",canvas.width/4,canvas.height/2.5);
-  ctx.fillText("Presiona Z para entrar en modo creador", canvas.width/4, canvas.height/2);
+  ctx.fillText("Presiona Z para entrar en modo libre", canvas.width/4, canvas.height/2);
   ctx.fillText("Presiona S para guardar, R para restaurar y C para limpiar", canvas.width/4,canvas.height/1.7);
 }
 function creador(){
@@ -133,6 +133,25 @@ function game(){
   ctx.stroke(squareBorder);
   ctx.fillStyle = 'black'
   ctx.fill(squareBorder)}
+  else if (currentLevel == 1){
+    house = new Path2D();
+    house.moveTo(380,80);
+    house.lineTo(610,80);
+    house.lineTo(610,310);
+    house.lineTo(700,220);
+    house.lineTo(1030,540);
+    house.lineTo(840,540);
+    house.lineTo(840,850);
+    house.lineTo(200,850);
+    house.lineTo(200,540);
+    house.lineTo(160,540);
+    house.lineTo(380,316);
+    house.lineTo(380,80);
+    ctx.strokeStyle = "white";
+    ctx.stroke(house);
+    ctx.fillStyle = 'black';
+    ctx.fill(house);
+  }
   else {
     currentBackground = levels[currentLevel]
   }
@@ -153,8 +172,13 @@ function verification(){
        }
       };
       if (incorrectPixels < 500){
-        alert("Figura valida!")
-        currentLevel ++;
+        if (confirm("Figura valida!, deseas continuar al proximo nivel?")){
+          currentLevel ++;
+        }
+        else{
+          currentScreen = welcomeScreen;
+        }
+        
       }
     }
   }
@@ -176,6 +200,7 @@ canvas.addEventListener("mousemove", event => {
 }}})
 canvas.addEventListener("mousedown", event =>{
   cancelAnimationFrame(currentScreen);
+  console.log(x,y);
   down = true;
     if (event.shiftKey){
         for (let i = 0; i, figuresTotal.length; i++){
